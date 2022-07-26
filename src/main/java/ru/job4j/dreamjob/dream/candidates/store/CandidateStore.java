@@ -6,18 +6,20 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CandidateStore {
     private static final CandidateStore INST = new CandidateStore();
     private final Map<Integer, Candidate> store = new ConcurrentHashMap<>();
+    private final AtomicInteger number = new AtomicInteger();
 
     private CandidateStore() {
-        store.put(1, new Candidate(1, "Pavel", "Java Middle",
-                LocalDateTime.now()));
-        store.put(2, new Candidate(2, "Ivan", "Python junior",
-                LocalDateTime.now()));
-        store.put(3, new Candidate(3, "Maxim", "Java senior",
-                LocalDateTime.now()));
+        store.put(number.incrementAndGet(), new Candidate(1, "Pavel",
+                "Java Middle", LocalDateTime.now()));
+        store.put(number.incrementAndGet(), new Candidate(2, "Ivan",
+                "Python junior", LocalDateTime.now()));
+        store.put(number.incrementAndGet(), new Candidate(3, "Maxim",
+                "Java senior", LocalDateTime.now()));
     }
 
     public static CandidateStore instOf() {
