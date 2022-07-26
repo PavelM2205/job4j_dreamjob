@@ -1,23 +1,23 @@
-package ru.job4j.dreamjob.dream.candidates.model;
+package ru.job4j.dreamjob.dream.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Candidate {
+public class Post {
     private int id;
     private String name;
     private String description;
     private LocalDateTime created;
 
-    public Candidate() {
+    public Post() {
     }
 
-    public Candidate(int id, String name) {
+    public Post(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Candidate(int id, String name, String description, LocalDateTime created) {
+    public Post(int id, String name, String description, LocalDateTime created) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -64,8 +64,8 @@ public class Candidate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Candidate candidate = (Candidate) o;
-        return id == candidate.id;
+        Post post = (Post) o;
+        return id == post.id;
     }
 
     @Override
