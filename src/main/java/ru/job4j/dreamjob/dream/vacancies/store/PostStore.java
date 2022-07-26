@@ -31,6 +31,7 @@ public class PostStore {
     }
 
     public void addPost(Post post) {
+        post.setId(number.incrementAndGet());
         posts.put(post.getId(), post);
     }
 
