@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.dream.persistence;
 
+import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.dream.model.Candidate;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@ThreadSafe
 @Repository
 public class CandidateStore {
     private final Map<Integer, Candidate> store = new ConcurrentHashMap<>();
