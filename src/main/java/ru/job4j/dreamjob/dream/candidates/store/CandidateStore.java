@@ -31,6 +31,7 @@ public class CandidateStore {
     }
 
     public void addCandidate(Candidate candidate) {
+        candidate.setId(number.incrementAndGet());
         store.put(candidate.getId(), candidate);
     }
 
