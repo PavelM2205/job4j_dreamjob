@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.dream.persistence;
 
+import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.dream.model.Post;
 
 import java.time.LocalDateTime;
@@ -8,22 +9,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Repository
 public class PostStore {
-    private static final PostStore INST = new PostStore();
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final AtomicInteger number = new AtomicInteger();
 
-    private PostStore() {
+    public PostStore() {
         posts.put(number.incrementAndGet(), new Post(1, "Junior Java Job",
                 "Very good job", LocalDateTime.now()));
         posts.put(number.incrementAndGet(), new Post(2, "Middle Java Job",
                 "You don't be stupid", LocalDateTime.now()));
         posts.put(number.incrementAndGet(), new Post(3, "Senior Java Job",
                 "We are searching a master", LocalDateTime.now()));
-    }
-
-    public static PostStore instOf() {
-        return INST;
     }
 
     public Collection<Post> findAll() {

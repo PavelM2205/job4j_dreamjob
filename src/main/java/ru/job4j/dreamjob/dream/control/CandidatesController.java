@@ -11,7 +11,11 @@ import ru.job4j.dreamjob.dream.service.CandidateService;
 
 @Controller
 public class CandidatesController {
-    private final CandidateService service = CandidateService.instOf();
+    private final CandidateService service;
+
+    public CandidatesController(CandidateService service) {
+        this.service = service;
+    }
 
     @GetMapping("/candidates")
     public String candidates(Model model) {

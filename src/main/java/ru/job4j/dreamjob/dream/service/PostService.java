@@ -1,20 +1,17 @@
 package ru.job4j.dreamjob.dream.service;
 
+import org.springframework.stereotype.Service;
 import ru.job4j.dreamjob.dream.model.Post;
 import ru.job4j.dreamjob.dream.persistence.PostStore;
 
 import java.util.Collection;
 
+@Service
 public class PostService {
-    private static final PostService POST_SERVICE = new PostService();
     private final PostStore store;
 
-    private PostService() {
-        this.store = PostStore.instOf();
-    }
-
-    public static PostService instOf() {
-        return POST_SERVICE;
+    public PostService(PostStore store) {
+        this.store = store;
     }
 
     public Collection<Post> findAll() {
