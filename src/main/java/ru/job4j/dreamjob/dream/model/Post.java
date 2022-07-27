@@ -1,7 +1,5 @@
 package ru.job4j.dreamjob.dream.model;
 
-import java.awt.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,6 +9,7 @@ public class Post {
     private String description;
     private LocalDateTime created;
     private boolean visible;
+    private City city;
 
     public Post() {
     }
@@ -65,6 +64,14 @@ public class Post {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 
     @Override
