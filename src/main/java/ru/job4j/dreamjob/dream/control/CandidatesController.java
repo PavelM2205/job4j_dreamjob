@@ -53,7 +53,11 @@ public class CandidatesController {
     @PostMapping("/updateCandidate")
     public String updateCandidate(@ModelAttribute Candidate candidate,
                                   @RequestParam("file") MultipartFile file) throws IOException {
-        candidate.setPhoto(file.getBytes());
+        if (file.isEmpty()) {
+            candidate.setPhoto(service.findById(candidate.getId()).getPhoto());
+        } else {
+            candidate.setPhoto(file.getBytes());
+        }
         service.update(candidate);
         return "redirect:/candidates";
     }
