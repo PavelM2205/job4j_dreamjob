@@ -69,7 +69,7 @@ public class PostDBStore {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
                 cn.prepareStatement(
                         "UPDATE post SET name = ?, description = ?, created = ?,"
-                                + " visible = ?, city_id = ? where id = ?")) {
+                                + " visible = ?, city_id = ? WHERE id = ?")) {
             statement.setString(1, post.getName());
             statement.setString(2, post.getDescription());
             statement.setTimestamp(3, Timestamp.valueOf(post.getCreated()));
@@ -84,7 +84,7 @@ public class PostDBStore {
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("SELECT * FROM post where id = ?")) {
+                cn.prepareStatement("SELECT * FROM post WHERE id = ?")) {
             statement.setInt(1, id);
             try (ResultSet it = statement.executeQuery()) {
                 if (it.next()) {

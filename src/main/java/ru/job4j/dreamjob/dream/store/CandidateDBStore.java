@@ -7,6 +7,7 @@ import ru.job4j.dreamjob.dream.model.Candidate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +25,12 @@ public class CandidateDBStore {
                 cn.prepareStatement("SELECT * FROM candidates")) {
             try (ResultSet res = statement.executeQuery()) {
                 while (res.next()) {
-                    result.add(new Candidate(res.getInt("id"),
-                            res.getString("name"), res.getBytes("image")));
+                    result.add(new Candidate(
+                            res.getInt("id"),
+                            res.getString("name"),
+                            res.getString("description"),
+                            res.getTimestamp("created").toLocalDateTime(),
+                            res.getBytes("image")));
                 }
             }
         } catch (Exception exc) {
@@ -36,10 +41,14 @@ public class CandidateDBStore {
 
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("INSERT INTO candidates(name, image) VALUES (?, ?)",
+                cn.prepareStatement(
+                        "INSERT INTO candidates(name, description, created, image) "
+                                + "VALUES (?, ?, ?, ?)",
                         PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, candidate.getName());
-            statement.setBytes(2, candidate.getPhoto());
+            statement.setString(2, candidate.getDescription());
+            statement.setTimestamp(3, Timestamp.valueOf(candidate.getCreated()));
+            statement.setBytes(4, candidate.getPhoto());
             statement.execute();
             try (ResultSet res = statement.getGeneratedKeys()) {
                 if (res.next()) {
@@ -55,12 +64,16 @@ public class CandidateDBStore {
 
     public Candidate findById(int id) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("SELECT * FROM candidates where id = ?")) {
+                cn.prepareStatement("SELECT * FROM candidates WHERE id = ?")) {
             statement.setInt(1, id);
             try (ResultSet res = statement.executeQuery()) {
                 if (res.next()) {
-                    return new Candidate(res.getInt("id"),
-                            res.getString("name"), res.getBytes("image"));
+                    return new Candidate(
+                            res.getInt("id"),
+                            res.getString("name"),
+                            res.getString("description"),
+                            res.getTimestamp("created").toLocalDateTime(),
+                            res.getBytes("image"));
                 }
             }
         } catch (Exception exc) {
@@ -71,9 +84,14 @@ public class CandidateDBStore {
 
     public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("UPDATE candidates SET name = ?, image = ?")) {
+                cn.prepareStatement(
+                        "UPDATE candidates SET name = ?, description = ?, "
+                                + "created = ?, image = ? WHERE id = ?")) {
             statement.setString(1, candidate.getName());
-            statement.setBytes(2, candidate.getPhoto());
+            statement.setString(2, candidate.getDescription());
+            statement.setTimestamp(3, Timestamp.valueOf(candidate.getCreated()));
+            statement.setBytes(4, candidate.getPhoto());
+            statement.setInt(5, candidate.getId());
             statement.execute();
         } catch (Exception exc) {
             exc.printStackTrace();

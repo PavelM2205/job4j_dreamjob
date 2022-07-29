@@ -63,6 +63,10 @@ public class Post {
         return created;
     }
 
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
     public boolean isVisible() {
         return visible;
     }
