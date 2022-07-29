@@ -8,6 +8,7 @@ import ru.job4j.dreamjob.dream.model.Post;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,11 @@ public class PostDBStore {
                 cn.prepareStatement("SELECT * FROM post")) {
             try (ResultSet it = statement.executeQuery()) {
                 while (it.next()) {
-                    Post current = new Post(it.getInt("id"), it.getString("name"));
+                    Post current = new Post(
+                            it.getInt("id"), it.getString("name"),
+                            it.getString("description"),
+                            it.getTimestamp("created").toLocalDateTime(),
+                            it.getBoolean("visible"));
                     current.setCity(new City(it.getInt("city_id")));
                     posts.add(current);
                 }
@@ -38,10 +43,15 @@ public class PostDBStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("INSERT INTO post(name, city_id) VALUES (?, ?)",
+                cn.prepareStatement(
+                        "INSERT INTO post(name, description, created, visible, city_id)"
+                                + " VALUES (?, ?, ?, ?, ?)",
                         PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, post.getName());
-            statement.setInt(2, post.getCity().getId());
+            statement.setString(2, post.getDescription());
+            statement.setTimestamp(3, Timestamp.valueOf(post.getCreated()));
+            statement.setBoolean(4, post.isVisible());
+            statement.setInt(5, post.getCity().getId());
             statement.execute();
             try (ResultSet id = statement.getGeneratedKeys()) {
                 if (id.next()) {
@@ -57,10 +67,15 @@ public class PostDBStore {
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection(); PreparedStatement statement =
-                cn.prepareStatement("UPDATE post SET name = ?, city_id = ? where id = ?")) {
+                cn.prepareStatement(
+                        "UPDATE post SET name = ?, description = ?, created = ?,"
+                                + " visible = ?, city_id = ? where id = ?")) {
             statement.setString(1, post.getName());
-            statement.setInt(2, post.getCity().getId());
-            statement.setInt(3, post.getId());
+            statement.setString(2, post.getDescription());
+            statement.setTimestamp(3, Timestamp.valueOf(post.getCreated()));
+            statement.setBoolean(4, post.isVisible());
+            statement.setInt(5, post.getCity().getId());
+            statement.setInt(6, post.getId());
             statement.execute();
         } catch (Exception exc) {
             exc.printStackTrace();
@@ -73,7 +88,11 @@ public class PostDBStore {
             statement.setInt(1, id);
             try (ResultSet it = statement.executeQuery()) {
                 if (it.next()) {
-                    Post post = new Post(it.getInt("id"), it.getString("name"));
+                    Post post = new Post(
+                            it.getInt("id"), it.getString("name"),
+                            it.getString("description"),
+                            it.getTimestamp("created").toLocalDateTime(),
+                            it.getBoolean("visible"));
                     post.setCity(new City(it.getInt("city_id")));
                     return post;
                 }
