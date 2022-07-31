@@ -34,7 +34,8 @@ public class CandidateDBStoreTest {
     void whenAddCandidate() {
         CandidateDBStore store = new CandidateDBStore(pool);
         Candidate candidate = new Candidate(
-                0, "Pavel", "Java developer", LocalDateTime.now(),
+                0, "Pavel", "Java developer",
+                LocalDateTime.of(2022, 7, 31, 12, 0),
                 new byte[3]
         );
         store.add(candidate);
@@ -49,7 +50,8 @@ public class CandidateDBStoreTest {
     public void whenAddPostThenMustBeIdInstallIntoPost() {
         CandidateDBStore store = new CandidateDBStore(pool);
         Candidate candidate = new Candidate(
-                0, "Pavel", "Java developer", LocalDateTime.now(),
+                0, "Pavel", "Java developer",
+                LocalDateTime.of(2022, 7, 31, 12, 0),
                 new byte[3]
         );
         store.add(candidate);
@@ -71,7 +73,8 @@ public class CandidateDBStoreTest {
     public void whenUpdateThenMustBeChangedCandidateWithSameId() {
         CandidateDBStore store = new CandidateDBStore(pool);
         Candidate candidate = new Candidate(
-                0, "Pavel", "Java developer", LocalDateTime.now(),
+                0, "Pavel", "Java developer",
+                LocalDateTime.of(2022, 7, 31, 12, 0),
                 new byte[3]
         );
         store.add(candidate);

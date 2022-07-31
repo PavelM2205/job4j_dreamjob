@@ -35,7 +35,8 @@ public class PostDBStoreTest {
     public void whenCreatePost() {
         PostDBStore store = new PostDBStore(pool);
         Post post = new Post(
-                0, "Java Job", "The funny work", LocalDateTime.now(),
+                0, "Java Job", "The funny work",
+                LocalDateTime.of(2022, 7, 31, 12, 0),
                 false);
         City city = new City(1);
         post.setCity(city);
@@ -71,7 +72,8 @@ public class PostDBStoreTest {
     public void whenUpdateThenMustBeChangedPostWithSameId() {
         PostDBStore store = new PostDBStore(pool);
         Post post = new Post(
-                0, "Java Job", "The funny work", LocalDateTime.now(),
+                0, "Java Job", "The funny work",
+                LocalDateTime.of(2022, 7, 31, 12, 0),
                 true);
         City city = new City(1);
         post.setCity(city);
