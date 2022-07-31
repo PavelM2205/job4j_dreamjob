@@ -76,7 +76,7 @@ public class Post {
     }
 
     public City getCity() {
-        return city;
+        return this.city == null ? new City() : this.city;
     }
 
     public void setCity(City city) {
@@ -98,5 +98,15 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" + "id=" + id
+                + ", name='" + name + '\''
+                + ", description='" + description + '\''
+                + ", created=" + created
+                + ", visible=" + visible
+                + ", city=" + city + '}';
     }
 }
