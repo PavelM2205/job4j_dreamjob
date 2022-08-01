@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.dreamjob.dream.model.User;
 import ru.job4j.dreamjob.dream.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @ThreadSafe
@@ -34,7 +36,7 @@ public class UserController {
                         "Пользователь с такой почтой уже существует");
                 return "registrationFail";
             }
-            return "registrationSuccess";
+            return "redirect:/loginPage";
     }
 
     @GetMapping("/loginPage")
@@ -45,12 +47,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String registration(@ModelAttribute User user) {
+    public String registration(@ModelAttribute User user, HttpServletRequest req) {
         Optional<User> regUser = service.findUserByEmailAndPwd(
                 user.getEmail(), user.getPassword());
         if (regUser.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
+        HttpSession session = req.getSession();
+        session.setAttribute("user", regUser.get());
         return "redirect:/index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/loginPage";
     }
 }

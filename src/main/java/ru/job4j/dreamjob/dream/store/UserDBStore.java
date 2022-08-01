@@ -24,10 +24,11 @@ public class UserDBStore {
     public Optional<User> add(User user) {
         Optional<User> result = Optional.empty();
         try (PreparedStatement st = pool.getConnection().prepareStatement(
-                "INSERT INTO users(email, password) VALUES (?, ?)",
+                "INSERT INTO users(email, password, name) VALUES (?, ?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
             st.setString(1, user.getEmail());
             st.setString(2, user.getPassword());
+            st.setString(3, user.getName());
             st.execute();
             try (ResultSet res = st.getGeneratedKeys()) {
                 if (res.next()) {
@@ -49,7 +50,7 @@ public class UserDBStore {
                 if (res.next()) {
                     return new User(
                             res.getInt("id"), res.getString("email"),
-                            res.getString("password"));
+                            res.getString("password"), res.getString("name"));
                 }
             }
         } catch (Exception exc) {
@@ -66,7 +67,7 @@ public class UserDBStore {
                 while (res.next()) {
                     result.add(new User(
                             res.getInt("id"), res.getString("email"),
-                            res.getString("password")));
+                            res.getString("password"), res.getString("name")));
                 }
             }
         } catch (Exception exc) {
@@ -77,10 +78,11 @@ public class UserDBStore {
 
     public void update(User user) {
         try (PreparedStatement st = pool.getConnection().prepareStatement(
-                "UPDATE users SET email = ?, password = ? WHERE id = ?")) {
+                "UPDATE users SET email = ?, password = ?, name = ? WHERE id = ?")) {
             st.setString(1, user.getEmail());
             st.setString(2, user.getPassword());
-            st.setInt(3, user.getId());
+            st.setString(3, user.getName());
+            st.setInt(4, user.getId());
             st.execute();
 
         } catch (Exception exc) {
@@ -97,7 +99,7 @@ public class UserDBStore {
             try (ResultSet res = st.executeQuery()) {
                 if (res.next()) {
                     result = Optional.of(new User(res.getInt("id"), res.getString("email"),
-                            res.getString("password")));
+                            res.getString("password"), res.getString("name")));
                 }
             }
 
