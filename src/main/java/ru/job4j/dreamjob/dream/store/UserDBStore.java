@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDBStore {
@@ -20,7 +21,8 @@ public class UserDBStore {
         this.pool = pool;
     }
 
-    public User add(User user) {
+    public Optional<User> add(User user) {
+        Optional<User> result = Optional.empty();
         try (PreparedStatement st = pool.getConnection().prepareStatement(
                 "INSERT INTO users(email, password) VALUES (?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -30,12 +32,13 @@ public class UserDBStore {
             try (ResultSet res = st.getGeneratedKeys()) {
                 if (res.next()) {
                     user.setId(res.getInt("id"));
+                    result = Optional.of(user);
                 }
             }
         } catch (Exception exc) {
             LOG.error("Exception: ", exc);
         }
-        return user;
+        return result;
     }
 
     public User findById(int id) {

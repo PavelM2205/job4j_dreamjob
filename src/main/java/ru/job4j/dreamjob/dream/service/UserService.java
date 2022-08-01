@@ -5,6 +5,7 @@ import ru.job4j.dreamjob.dream.model.User;
 import ru.job4j.dreamjob.dream.store.UserDBStore;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,7 +23,7 @@ public class UserService {
         return store.findById(id);
     }
 
-    public User add(User user) {
+    public Optional<User> add(User user) {
         return store.add(user);
     }
 
