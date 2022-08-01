@@ -87,4 +87,23 @@ public class UserDBStore {
             LOG.error("Exception: ", exc);
         }
     }
+
+    public Optional<User> findUserByEmailAndPwd(String email, String password) {
+        Optional<User> result = Optional.empty();
+        try (PreparedStatement st = pool.getConnection().prepareStatement(
+                "SELECT * FROM users WHERE email = ? AND password = ?")) {
+            st.setString(1, email);
+            st.setString(2, password);
+            try (ResultSet res = st.executeQuery()) {
+                if (res.next()) {
+                    result = Optional.of(new User(res.getInt("id"), res.getString("email"),
+                            res.getString("password")));
+                }
+            }
+
+        } catch (Exception exc) {
+            LOG.error("Exception: ", exc);
+        }
+        return result;
+    }
 }
