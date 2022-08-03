@@ -56,7 +56,7 @@ public class PostController {
         City selectedCity = cityService.findById(Integer.parseInt(req.getParameter("city.id")));
         post.setCity(selectedCity);
         postService.addPost(post);
-        return "redirect:posts";
+        return "redirect:/posts";
     }
 
     @GetMapping("/formUpdatePost/{postId}")
